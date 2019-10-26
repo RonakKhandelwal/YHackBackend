@@ -3,7 +3,6 @@ package sbu.hackathon.yhack.leetcode.config;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -11,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Mayank Tiwari on 26/10/19.
  */
-@Configuration
+//@Configuration
 public class SeleniumConfig {
 
     static {

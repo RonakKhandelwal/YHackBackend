@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class Question implements Serializable {
+public class QuestionObject implements Serializable {
 
     @JsonProperty("question_id")
     private Long questionId;

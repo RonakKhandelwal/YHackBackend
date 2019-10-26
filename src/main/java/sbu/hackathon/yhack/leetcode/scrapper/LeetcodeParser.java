@@ -5,6 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 import sbu.hackathon.yhack.leetcode.model.CompanyQuestion;
 import sbu.hackathon.yhack.leetcode.model.Question;
 import sbu.hackathon.yhack.leetcode.model.Topic;
@@ -19,9 +20,10 @@ import java.util.Set;
  * Created by Mayank Tiwari on 26/10/19.
  */
 @Slf4j
+@Component
 public class LeetcodeParser {
 
-    private List<Question> readSourceFiles() throws IOException {
+    public List<Question> parseAllCachedData() throws IOException {
         List<Question> parsedQuestions = new ArrayList<>();
         File directory = new File("cached-leetcode-files");
         File[] files = directory.listFiles();
@@ -136,7 +138,7 @@ public class LeetcodeParser {
 
     public static void main(String[] args) throws IOException {
         LeetcodeParser leetcodeParser = new LeetcodeParser();
-        List<Question> questions = leetcodeParser.readSourceFiles();
+        List<Question> questions = leetcodeParser.parseAllCachedData();
         for (Question question : questions) {
             System.out.println(question);
         }

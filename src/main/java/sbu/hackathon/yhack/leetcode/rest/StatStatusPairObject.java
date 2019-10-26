@@ -11,10 +11,10 @@ import java.io.Serializable;
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class StatStatusPair implements Serializable {
+public class StatStatusPairObject implements Serializable {
 
     @JsonProperty("stat")
-    private Question question;
+    private QuestionObject questionObject;
 
     private String status;
     private int frequency;

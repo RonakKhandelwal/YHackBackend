@@ -13,9 +13,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import sbu.hackathon.yhack.leetcode.config.SeleniumConfig;
-import sbu.hackathon.yhack.leetcode.rest.LeetcodeBulkData;
+import sbu.hackathon.yhack.leetcode.rest.LeetcodeBulkDataObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,19 +30,19 @@ import java.util.zip.GZIPInputStream;
  * Created by Mayank Tiwari on 26/10/19.
  */
 @Slf4j
-@Component
+//@Component
 public class QuestionScrapper {
 
     @Autowired
     private SeleniumConfig config;
 
-    public LeetcodeBulkData scrapeLeetcodeData() {
+    public LeetcodeBulkDataObject scrapeLeetcodeData() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             File src = new File("/Users/mayanktiwari/Downloads/leetcode.json");
-            LeetcodeBulkData leetcodeBulkData = objectMapper.readValue(src, LeetcodeBulkData.class);
-            log.info("Read {} objects", leetcodeBulkData.getStatStatusPairs().size());
-            return leetcodeBulkData;
+            LeetcodeBulkDataObject leetcodeBulkDataObject = objectMapper.readValue(src, LeetcodeBulkDataObject.class);
+            log.info("Read {} objects", leetcodeBulkDataObject.getStatStatusPairObjects().size());
+            return leetcodeBulkDataObject;
         } catch (IOException e) {
             log.error("Error parsing Leetcode data", e);
         }

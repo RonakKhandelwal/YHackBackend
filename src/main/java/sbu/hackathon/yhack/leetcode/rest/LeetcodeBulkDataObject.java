@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class LeetcodeBulkData implements Serializable {
+public class LeetcodeBulkDataObject implements Serializable {
 
     @JsonProperty("user_name")
     private String userName;
@@ -42,6 +42,6 @@ public class LeetcodeBulkData implements Serializable {
     private String categorySlug;
 
     @JsonProperty("stat_status_pairs")
-    private List<StatStatusPair> statStatusPairs;
+    private List<StatStatusPairObject> statStatusPairObjects;
 
 }

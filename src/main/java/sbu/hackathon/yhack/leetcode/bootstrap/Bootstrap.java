@@ -1,17 +1,13 @@
 package sbu.hackathon.yhack.leetcode.bootstrap;
 
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import sbu.hackathon.yhack.leetcode.config.SeleniumConfig;
-import sbu.hackathon.yhack.leetcode.rest.LeetcodeBulkData;
-import sbu.hackathon.yhack.leetcode.rest.Question;
-import sbu.hackathon.yhack.leetcode.rest.StatStatusPair;
-import sbu.hackathon.yhack.leetcode.scrapper.QuestionScrapper;
+import sbu.hackathon.yhack.leetcode.model.Question;
+import sbu.hackathon.yhack.leetcode.repository.QuestionRepository;
+import sbu.hackathon.yhack.leetcode.scrapper.LeetcodeParser;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -22,42 +18,28 @@ import java.util.List;
 public class Bootstrap implements CommandLineRunner {
 
     @Autowired
-    private QuestionScrapper scrapper;
+    private LeetcodeParser leetcodeParser;
 
     @Autowired
-    private SeleniumConfig config;
+    private QuestionRepository questionRepository;
 
     @Override
     public void run(String... args) throws Exception {
         log.info("Initializing Application...");
+        long dataCount = questionRepository.count();
+        log.info("{} records found", dataCount);
+        if (dataCount == 0) {
 //        scrapeData();
+            parseScrappedData();
+        }
     }
 
-    private WebDriver initSeleniumDriver() {
-        WebDriver webDriver = config.getDriver();
-        webDriver.manage().window().maximize();
-        return webDriver;
+    private void parseScrappedData() throws Exception {
+        log.info("Preparing to parse all cached data...");
+        List<Question> cachedData = leetcodeParser.parseAllCachedData();
+        log.info("Parsed {} records... Preparing to Bulk insert data in DB...", cachedData.size());
+        questionRepository.saveAll(cachedData);
+        log.info("Finished writing data in DB...");
     }
 
-    private void scrapeData() {
-        WebDriver webDriver = initSeleniumDriver();
-        LeetcodeBulkData leetcodeBulkData = scrapper.scrapeLeetcodeData();
-        List<StatStatusPair> statStatusPairs = leetcodeBulkData.getStatStatusPairs();
-        log.info("Read {} questions data", statStatusPairs.size());
-        final boolean[] skip = {true};
-        statStatusPairs.forEach(statStatusPair -> {
-            Question question = statStatusPair.getQuestion();
-            String questionTitle = question.getQuestionTitle();
-            if (questionTitle.equals("Encode String with Shortest Length")) {
-                skip[0] = false;
-            }
-            if (!skip[0]) {
-                try {
-                    scrapper.downloadWebPageSelenium(question.getQuestionTitleSlug(), webDriver);
-                } catch (IOException e) {
-                    log.error("Error scrapping data for file: " + questionTitle, e);
-                }
-            }
-        });
-    }
 }
