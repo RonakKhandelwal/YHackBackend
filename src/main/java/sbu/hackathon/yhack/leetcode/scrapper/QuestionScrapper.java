@@ -7,7 +7,14 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sbu.hackathon.yhack.leetcode.config.SeleniumConfig;
 import sbu.hackathon.yhack.leetcode.rest.LeetcodeBulkData;
 
 import java.io.File;
@@ -17,6 +24,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.time.Duration;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -25,6 +33,9 @@ import java.util.zip.GZIPInputStream;
 @Slf4j
 @Component
 public class QuestionScrapper {
+
+    @Autowired
+    private SeleniumConfig config;
 
     public LeetcodeBulkData scrapeLeetcodeData() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -37,6 +48,69 @@ public class QuestionScrapper {
             log.error("Error parsing Leetcode data", e);
         }
         return null;
+    }
+
+    private WebDriver initSeleniumDriver() {
+        WebDriver webDriver = config.getDriver();
+        webDriver.manage().window().maximize();
+        return webDriver;
+    }
+
+    public void downloadWebPageSelenium(String pageName, WebDriver webDriver) throws IOException {
+//        webDriver = config.getDriver();
+//        webDriver = new ChromeDriver();
+//        webDriver.manage().window().maximize();
+
+        File outputDirectory = new File("cached-leetcode-files");
+        if (!outputDirectory.exists()) {
+            boolean mkDirs = outputDirectory.mkdirs();
+            log.info("{} Finished creating output directory", mkDirs);
+        }
+
+        String url = MessageFormat.format("https://leetcode.com/problems/{0}/", pageName);
+        log.info("Reading data from URL: {}", url);
+        log.info("Waiting for page to load...");
+
+        webDriver.get(url);
+
+        waitForLoad(webDriver);
+        log.info("Page loaded...");
+
+        String pageSource = webDriver.getPageSource();
+        File outputFile = new File(outputDirectory, pageName + ".html");
+        try (FileOutputStream fileOutputStream = new FileOutputStream(outputFile, false)) {
+            fileOutputStream.write(pageSource.getBytes());
+            log.info("Finished writing output to location: {}", outputFile.getAbsolutePath());
+        }
+
+//        webDriver.quit();
+
+        try {
+            Thread.sleep(Duration.ofSeconds(5).toMillis());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void waitForLoad(WebDriver driver) {
+//        ExpectedCondition<Boolean> pageLoadCondition = executeScript -> {
+//            return ((JavascriptExecutor) executeScript).executeScript("return document.readyState").equals("complete");
+//        };
+//        WebDriverWait wait = new WebDriverWait(driver, 30);
+//        wait.until(pageLoadCondition);
+        Wait<WebDriver> wait = new FluentWait<>(driver)
+                .withTimeout(Duration.ofSeconds(30))
+                .pollingEvery(Duration.ofSeconds(5))
+                .ignoring(Exception.class);
+
+        /*wait.until(new Function<WebDriver, WebElement>() {
+            public WebElement apply(WebDriver driver) {
+//                return driver.findElement(By.className("CodeMirror-lines"));
+                return driver.findElement(By.cssSelector("[data-cy='question-title']"));
+            }
+        });*/
+
+        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("[data-cy='question-title']")));
     }
 
     public void downloadWebPage(String pageName) throws IOException {

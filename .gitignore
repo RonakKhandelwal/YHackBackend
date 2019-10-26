@@ -88,3 +88,5 @@ hs_err_pid*
 # IntelliJ project files
 out
 gen
+
+cached-leetcode-files
