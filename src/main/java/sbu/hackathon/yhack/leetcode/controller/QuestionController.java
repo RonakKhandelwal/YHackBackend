@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import sbu.hackathon.yhack.leetcode.domain.Question;
 import sbu.hackathon.yhack.leetcode.domain.User;
 import sbu.hackathon.yhack.leetcode.model.QuestionUserModel;
+import sbu.hackathon.yhack.leetcode.model.UserQuestionStatistics;
 import sbu.hackathon.yhack.leetcode.repository.QuestionRepository;
 import sbu.hackathon.yhack.leetcode.repository.UserRepository;
 
@@ -36,7 +37,7 @@ public class QuestionController {
     }
 
     @GetMapping("/user/{user_id}")
-    public List<QuestionUserModel> getAllQuestionsForUser(@PathVariable("user_id") String userId) {
+    public UserQuestionStatistics getAllQuestionsForUser(@PathVariable("user_id") String userId) {
         Optional<User> userByUserName = userRepository.findUserByUserName(userId);
         Set<String> solvedQuestionId = new HashSet<>();
         if (userByUserName.isPresent()) {
@@ -44,7 +45,7 @@ public class QuestionController {
         }
 
         Set<String> finalSolvedQuestionId = solvedQuestionId;
-        return getAllQuestions().stream()
+        List<QuestionUserModel> questionUserModelList = getAllQuestions().stream()
                 .map(question -> {
                     QuestionUserModel questionUserModel = new QuestionUserModel(question);
                     if (!finalSolvedQuestionId.isEmpty() && finalSolvedQuestionId.contains(question.getId())) {
@@ -53,6 +54,8 @@ public class QuestionController {
                     return questionUserModel;
                 })
                 .collect(Collectors.toList());
+
+        return new UserQuestionStatistics(questionUserModelList);
     }
 
 }
