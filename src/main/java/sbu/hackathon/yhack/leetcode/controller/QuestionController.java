@@ -2,11 +2,13 @@ package sbu.hackathon.yhack.leetcode.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import sbu.hackathon.yhack.leetcode.domain.Question;
 import sbu.hackathon.yhack.leetcode.domain.User;
 import sbu.hackathon.yhack.leetcode.model.QuestionUserModel;
-import sbu.hackathon.yhack.leetcode.model.UserQuestionStatistics;
 import sbu.hackathon.yhack.leetcode.repository.QuestionRepository;
 import sbu.hackathon.yhack.leetcode.repository.UserRepository;
 
@@ -47,7 +49,7 @@ public class QuestionController {
     }
 
     @GetMapping("/user/{user_id}")
-    public UserQuestionStatistics getAllQuestionsForUser(@PathVariable("user_id") String userId) {
+    public List<QuestionUserModel> getAllQuestionsForUser(@PathVariable("user_id") String userId) {
         Optional<User> userByUserName = userRepository.findUserByUserName(userId);
         Set<String> excludedQuestionId = new HashSet<>();
         Set<String> favoriteQuestionId = new HashSet<>();
@@ -71,7 +73,8 @@ public class QuestionController {
                 })
                 .collect(Collectors.toList());
 
-        return new UserQuestionStatistics(questionUserModelList);
+//        return new UserQuestionStatistics(questionUserModelList);
+        return questionUserModelList;
     }
 
     @GetMapping("/company/{company_name}")

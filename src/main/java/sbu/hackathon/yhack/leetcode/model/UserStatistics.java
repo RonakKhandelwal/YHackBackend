@@ -19,19 +19,19 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class UserQuestionStatistics {
+public class UserStatistics {
 
     @JsonProperty("overall_stats")
-    private UserStatistics userStatistics;
+    private OverallStatistics userStatistics;
 
     @JsonProperty("topic_stats")
     private List<TopicStatistics> topicStatistics;
 
-    @JsonProperty("questions")
-    private List<QuestionUserModel> questionUserModelList;
+//    @JsonProperty("questions")
+//    private List<QuestionUserModel> questionUserModelList;
 
-    public UserQuestionStatistics(List<QuestionUserModel> questionUserModelList) {
-        this.questionUserModelList = questionUserModelList;
+    public UserStatistics(List<QuestionUserModel> questionUserModelList) {
+//        this.questionUserModelList = questionUserModelList;
 
         /*Map<Integer, Long> difficultyStatus = questionUserModelList.stream()
                 .filter(QuestionUserModel::isSolved)
@@ -57,7 +57,7 @@ public class UserQuestionStatistics {
             }
         }
 
-        this.userStatistics = new UserStatistics(
+        this.userStatistics = new OverallStatistics(
                 difficultyStatus.getOrDefault(1, 0L),
                 difficultyStatus.getOrDefault(2, 0L),
                 difficultyStatus.getOrDefault(3, 0L)
@@ -87,7 +87,7 @@ public class UserQuestionStatistics {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class UserStatistics {
+    private static class OverallStatistics {
 
         private long noEasySolved;
         private long noMediumSolved;
