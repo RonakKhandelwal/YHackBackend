@@ -38,6 +38,7 @@
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
             <scope>test</scope>
         </dependency>
+
         <!--Firebase-->
         <dependency>
             <groupId>com.google.firebase</groupId>
@@ -79,7 +80,7 @@
             <version>${jackson.version}</version>
         </dependency>
 
-        <!--        Spring Documentation-->
+        <!--Spring Documentation-->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
@@ -91,7 +92,7 @@
             <version>2.9.2</version>
         </dependency>
 
-        <!--        Spring Boot Defaults-->
+        <!--Spring Boot Defaults-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -113,6 +114,10 @@
         <!--            <groupId>org.springframework.boot</groupId>-->
         <!--            <artifactId>spring-boot-starter-jdbc</artifactId>-->
         <!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

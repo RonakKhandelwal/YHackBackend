@@ -1,2 +1,13 @@
 runtime: java11
 instance_class: F4
+#instance_class: flex
+#runtime: java
+#api_version: 2
+#env: flex
+
+#runtime_config:
+#  jdk: openjdk8
+
+env_variables:
+  JAVA_USER_OPTS: '-Dspring.profiles.active=prod'
+  SPRING_PROFILES_ACTIVE: 'prod'

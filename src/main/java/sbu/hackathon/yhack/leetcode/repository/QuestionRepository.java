@@ -2,7 +2,7 @@ package sbu.hackathon.yhack.leetcode.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import sbu.hackathon.yhack.leetcode.model.Question;
+import sbu.hackathon.yhack.leetcode.domain.Question;
 
 /**
  * Created by Mayank Tiwari on 26/10/19.

@@ -2,30 +2,57 @@ package sbu.hackathon.yhack.leetcode.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import sbu.hackathon.yhack.leetcode.model.Question;
+import org.springframework.web.bind.annotation.*;
+import sbu.hackathon.yhack.leetcode.domain.Question;
+import sbu.hackathon.yhack.leetcode.domain.User;
+import sbu.hackathon.yhack.leetcode.model.QuestionUserModel;
 import sbu.hackathon.yhack.leetcode.repository.QuestionRepository;
+import sbu.hackathon.yhack.leetcode.repository.UserRepository;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by Mayank Tiwari on 26/10/19.
  */
 @Slf4j
 @RestController
-@RequestMapping(value = "/question", produces = "application/json")
+@RequestMapping(value = "/api/questions", produces = "application/json")
 public class QuestionController {
 
     @Autowired
     private QuestionRepository questionRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping
     @ResponseBody
     public List<Question> getAllQuestions() {
         return questionRepository.findAll();
+    }
+
+    @GetMapping("/user/{user_id}")
+    public List<QuestionUserModel> getAllQuestionsForUser(@PathVariable("user_id") String userId) {
+        Optional<User> userByUserName = userRepository.findUserByUserName(userId);
+        Set<String> solvedQuestionId = new HashSet<>();
+        if (userByUserName.isPresent()) {
+            solvedQuestionId = userByUserName.get().getSolvedQuestions().stream().map(Question::getId).collect(Collectors.toSet());
+        }
+
+        Set<String> finalSolvedQuestionId = solvedQuestionId;
+        return getAllQuestions().stream()
+                .map(question -> {
+                    QuestionUserModel questionUserModel = new QuestionUserModel(question);
+                    if (!finalSolvedQuestionId.isEmpty() && finalSolvedQuestionId.contains(question.getId())) {
+                        questionUserModel.setSolved(true);
+                    }
+                    return questionUserModel;
+                })
+                .collect(Collectors.toList());
     }
 
 }

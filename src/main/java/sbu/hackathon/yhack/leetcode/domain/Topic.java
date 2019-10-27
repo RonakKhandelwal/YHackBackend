@@ -1,4 +1,4 @@
-package sbu.hackathon.yhack.leetcode.model;
+package sbu.hackathon.yhack.leetcode.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,11 +13,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 //@EqualsAndHashCode(exclude = {""}, callSuper = true)
 @Document
-//public class CompanyQuestion extends BaseEntity {
-public class CompanyQuestion {
+//public class Topic extends BaseEntity {
+public class Topic {
 
-    private String companyName;
-    private int questionFrequency;
+    private String name;
 
 }
-

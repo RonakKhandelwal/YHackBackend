@@ -7,9 +7,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
-import sbu.hackathon.yhack.leetcode.model.CompanyQuestion;
-import sbu.hackathon.yhack.leetcode.model.Question;
-import sbu.hackathon.yhack.leetcode.model.Topic;
+import sbu.hackathon.yhack.leetcode.domain.CompanyQuestion;
+import sbu.hackathon.yhack.leetcode.domain.Question;
+import sbu.hackathon.yhack.leetcode.domain.Topic;
 import sbu.hackathon.yhack.leetcode.rest.LeetcodeBulkDataObject;
 import sbu.hackathon.yhack.leetcode.rest.StatStatusPairObject;
 

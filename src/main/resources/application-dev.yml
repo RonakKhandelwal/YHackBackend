@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      database: yhack
+      host: localhost
+      port: 27017
+#      username: username
+#      password: password

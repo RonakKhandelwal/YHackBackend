@@ -1,4 +1,4 @@
-package sbu.hackathon.yhack.leetcode.model;
+package sbu.hackathon.yhack.leetcode.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

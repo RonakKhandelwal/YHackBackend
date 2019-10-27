@@ -8,12 +8,3 @@ server:
 spring:
   jpa:
     show-sql: true
-
-  data:
-    mongodb:
-      uri: mongodb+srv://admin:P%40ssword01@cluster0-7zpzu.gcp.mongodb.net/test?retryWrites=true&w=majority
-      database: yhack
-#      host: localhost
-#      port: 27017
-#      username: username
-#      password: password
