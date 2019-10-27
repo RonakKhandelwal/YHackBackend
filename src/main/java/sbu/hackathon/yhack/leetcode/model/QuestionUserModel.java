@@ -18,6 +18,7 @@ public class QuestionUserModel {
     private Question question;
 
     private boolean isSolved;
+    private boolean isFavorite;
 
     public QuestionUserModel(Question question) {
         this.question = question;

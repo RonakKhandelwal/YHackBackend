@@ -38,6 +38,9 @@ public class User extends BaseEntity {
     @DBRef
     private Set<Question> solvedQuestions = new HashSet<>();
 
+    @DBRef
+    private Set<Question> favoriteQuestions = new HashSet<>();
+
     @Autowired
     @Transient
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -52,7 +55,7 @@ public class User extends BaseEntity {
 
     @JsonProperty
     public void setPassword(String password) {
-        log.info("Encoding password: {}", password);
+        log.trace("Encoding password: {}", password);
         if (!StringUtils.isEmpty(password)) {
             this.password = passwordEncoder.encode(password);
         }
