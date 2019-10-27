@@ -31,7 +31,7 @@ public class StatStatusPairObject implements Serializable {
 
     @Data
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private static class Difficulty {
+    public static class Difficulty {
 
         private int level;
 

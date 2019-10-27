@@ -29,6 +29,7 @@ public class ScrapperBootstrap implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         log.info("Loaded scrapper bootstrap...");
+//        scrapeData();
     }
 
     private WebDriver initSeleniumDriver() {

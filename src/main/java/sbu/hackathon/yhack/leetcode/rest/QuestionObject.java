@@ -39,7 +39,7 @@ public class QuestionObject implements Serializable {
     private int totalSubmitted;
 
     @JsonProperty("frontend_question_id")
-    private int frontendQuestionId;
+    private Long frontendQuestionId;
 
     @JsonProperty("is_new_question")
     private boolean isNewQuestion;

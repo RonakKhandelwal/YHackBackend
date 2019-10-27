@@ -1,5 +1,6 @@
 package sbu.hackathon.yhack.leetcode.scrapper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -9,12 +10,12 @@ import org.springframework.stereotype.Component;
 import sbu.hackathon.yhack.leetcode.model.CompanyQuestion;
 import sbu.hackathon.yhack.leetcode.model.Question;
 import sbu.hackathon.yhack.leetcode.model.Topic;
+import sbu.hackathon.yhack.leetcode.rest.LeetcodeBulkDataObject;
+import sbu.hackathon.yhack.leetcode.rest.StatStatusPairObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Mayank Tiwari on 26/10/19.
@@ -24,6 +25,17 @@ import java.util.Set;
 public class LeetcodeParser {
 
     public List<Question> parseAllCachedData() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        File src = new File("/Users/mayanktiwari/Downloads/leetcode.json");
+        LeetcodeBulkDataObject leetcodeBulkDataObject = objectMapper.readValue(src, LeetcodeBulkDataObject.class);
+        log.info("Read {} objects", leetcodeBulkDataObject.getStatStatusPairObjects().size());
+
+        Map<String, StatStatusPairObject> titleMapping = new HashMap<>();
+        for (StatStatusPairObject statStatusPairObject : leetcodeBulkDataObject.getStatStatusPairObjects()) {
+            String questionTitleSlug = statStatusPairObject.getQuestionObject().getQuestionTitleSlug();
+            titleMapping.put(questionTitleSlug, statStatusPairObject);
+        }
+
         List<Question> parsedQuestions = new ArrayList<>();
         File directory = new File("cached-leetcode-files");
         File[] files = directory.listFiles();
@@ -31,8 +43,15 @@ public class LeetcodeParser {
             return parsedQuestions;
         }
         for (File file : files) {
-            if (file.getName().contains(".html")) {
-                parsedQuestions.add(parseData(file));
+            String fileName = file.getName();
+            if (fileName.contains(".html")) {
+                String titleSlug = fileName.substring(0, fileName.lastIndexOf("."));
+//                System.out.println(titleSlug);
+                StatStatusPairObject statStatusPairObject = titleMapping.get(titleSlug);
+                if (statStatusPairObject == null) {
+                    throw new RuntimeException("Missing mapping for title: " + titleSlug);
+                }
+                parsedQuestions.add(parseFile(file, statStatusPairObject));
             }
         }
         log.info("{} files found!", files.length);
@@ -47,8 +66,8 @@ public class LeetcodeParser {
         return Integer.parseInt(data);
     }
 
-    private Question parseData(File file) throws IOException {
-        Question question = new Question();
+    private Question parseFile(File file, StatStatusPairObject statStatusPairObject) throws IOException {
+        Question question = new Question(statStatusPairObject);
 
         String fileName = file.getName();
         log.trace("Preparing to parse file: {}", fileName);
@@ -73,15 +92,13 @@ public class LeetcodeParser {
         log.trace("{} bytes of Problem description data found.", problemDescription.text().length());
         question.setDescription(problemDescription.html());
 
-        Elements acceptedElement = descriptionElement.select("div > div:nth-child(3) > div.css-12aggky > div:nth-child(1) > div.css-jkjiwi");
+        /*Elements acceptedElement = descriptionElement.select("div > div:nth-child(3) > div.css-12aggky > div:nth-child(1) > div.css-jkjiwi");
         assertNonNull(acceptedElement, "Accepted", fileName);
-//        log.info("\tAccepted: {}", acceptedElement.text());
         question.setAcceptedCount(parseQuestion(acceptedElement));
 
         Elements submissionElement = descriptionElement.select("div > div:nth-child(3) > div.css-12aggky > div:nth-child(2) > div.css-jkjiwi");
         assertNonNull(submissionElement, "Submissions", fileName);
-//        log.info("\tSubmissions: {}", submissionElement.text());
-        question.setSubmissionsCount(parseQuestion(submissionElement));
+        question.setSubmissionsCount(parseQuestion(submissionElement));*/
 
         Elements frequency = descriptionElement.select("button.time-period-button__3neY.selected__1jx3");
 //        assertNonNull(frequency, "Frequency", fileName); //Optional Element

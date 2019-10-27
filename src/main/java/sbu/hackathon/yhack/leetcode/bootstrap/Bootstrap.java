@@ -29,7 +29,6 @@ public class Bootstrap implements CommandLineRunner {
         long dataCount = questionRepository.count();
         log.info("{} records found", dataCount);
         if (dataCount == 0) {
-//        scrapeData();
             parseScrappedData();
         }
     }
